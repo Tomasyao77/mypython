@@ -6,6 +6,8 @@ import random
 import time
 import matplotlib.pyplot as plt  # 约定俗成的写法plt
 import tensorflow as tf
+from tqdm import tqdm
+import mydlib.face_align as align
 
 
 def log():
@@ -208,8 +210,35 @@ def lt3_loss():
     f.close()
     w.close()
 
+def merge_imdb_wiki():
+    base = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/C3AE_Age_Estimation/data/dataset/imdb_wiki_crop/"
+    f1 = open(base + "imdb_crop_train.txt", "r")
+    f2 = open(base + "wiki_crop_train.txt", "r")
+    w = open(base + "imdb_wiki_crop_train.txt", "a")
+    f1lines = f1.readlines()
+    f2lines = f2.readlines()
+    w_txt = f1lines + f2lines
+    for line in tqdm(w_txt):
+        if line is not None and line.__len__() > 1:
+            line = line.replace("\n", "")
+            w.write(line + "\n")
+
+    f1.close()
+    f2.close()
+    w.close()
+
+def gen_morph2_align():
+    base = "/media/zouy/workspace/gitcloneroot/mypython/dataset/"
+    f = os.listdir(base + "morph2/")  # 把所有图片名读进来
+    for index, value in enumerate(f):
+        print(index, value)
+        align.gen_align_img(base + "morph2/" + value, base + "morph2_align/" + value)
+        if index >= 10:
+            break
+
+
 if __name__ == '__main__':
-    plot()
+    gen_morph2_align()
     # x = np.zeros(5)
     # x = np.insert(x, 1, [1, 2])
     # print(x)
