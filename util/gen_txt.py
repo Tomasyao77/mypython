@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import sys
+
 sys.path.append('..')
 import os
 import math
@@ -13,6 +14,7 @@ import util.mydlib.face_align as align
 from util.dlib_face import dlib_face
 from util.get_args import get_args
 from config import cfg
+
 
 def log():
     f = open("../logs/20191107_211836_train_log", "r")
@@ -63,22 +65,18 @@ def changename():
 
 
 def write_txt():
-    # base = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/"
-    base = "/media/zouy/workspace/gitcloneroot/"
-
-    path = base + "C3AE_Age_Estimation/data/dataset/morph2/"
-    img_list = base + "C3AE_Age_Estimation/data/img_list/img_list.txt"
-    train_list = base + "C3AE_Age_Estimation/data/train_list/train.txt"
-    val_list = base + "C3AE_Age_Estimation/data/val_list/val.txt"
-    test_list = base + "C3AE_Age_Estimation/data/test_list/test.txt"
+    path = cfg.dataset.morph2_align + "/"
+    train_list = cfg.dataset.morph2_split + "/train_morph2_align.txt"
+    # val_list = base + "C3AE_Age_Estimation/data/val_list/val.txt"
+    test_list = cfg.dataset.morph2_split + "/test_morph2_align.txt"
 
     img_list_txt = []
     train_list_txt = []
-    val_list_txt = []
+    # val_list_txt = []
     test_list_txt = []
 
-    f = os.listdir(path)#把所有图片名读进来
-    # print(f.__len__())#52099
+    f = os.listdir(path)  # 把所有图片名读进来
+    # print(f.__len__())#morph2: 52099 morph2_align: 52017
 
     for name in f:
         # print(name)
@@ -90,32 +88,32 @@ def write_txt():
     # img_list_txt.sort()
     # train_list_txt.sort()
 
-    #random.shuffle(img_list_txt)
-    train_list_txt_tmp = img_list_txt[:int(img_list_txt.__len__() * 0.7)]
-    val_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.7):int(img_list_txt.__len__() * 0.9)]
-    test_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.9):]
+    # random.shuffle(img_list_txt)
+    train_list_txt_tmp = img_list_txt[:int(img_list_txt.__len__() * 0.8)]
+    # val_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.7):int(img_list_txt.__len__() * 0.9)]
+    test_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.8):]
     # print(train_list_txt)
     # 计算age_Yn_vector
-    for item in train_list_txt_tmp:
+    for item in tqdm(train_list_txt_tmp):
         train_list_txt_item = item.split(" ")
         age = int(item.split(" ")[1])
-        age_vector = np.zeros(12)
+        age_vector = np.zeros(11)  # 0-100 101类 11个年龄段
         age_vector[age // 10] = (10 - age % 10) / 10
         age_vector[age // 10 + 1] = age % 10 / 10
         np.insert(age_vector, 0, train_list_txt_item[1])
         train_list_txt.append(list_to_str(train_list_txt_item) + " " + list_to_str(age_vector))
-    for item in val_list_txt_tmp:
-        val_list_txt_item = item.split(" ")
-        age = int(item.split(" ")[1])
-        age_vector = np.zeros(12)
-        age_vector[age // 10] = (10 - age % 10) / 10
-        age_vector[age // 10 + 1] = age % 10 / 10
-        np.insert(age_vector, 0, val_list_txt_item[1])
-        val_list_txt.append(list_to_str(val_list_txt_item) + " " + list_to_str(age_vector))
-    for item in test_list_txt_tmp:
+    # for item in val_list_txt_tmp:
+    #     val_list_txt_item = item.split(" ")
+    #     age = int(item.split(" ")[1])
+    #     age_vector = np.zeros(11)
+    #     age_vector[age // 10] = (10 - age % 10) / 10
+    #     age_vector[age // 10 + 1] = age % 10 / 10
+    #     np.insert(age_vector, 0, val_list_txt_item[1])
+    #     val_list_txt.append(list_to_str(val_list_txt_item) + " " + list_to_str(age_vector))
+    for item in tqdm(test_list_txt_tmp):
         test_list_txt_item = item.split(" ")
         age = int(item.split(" ")[1])
-        age_vector = np.zeros(12)
+        age_vector = np.zeros(11)
         age_vector[age // 10] = (10 - age % 10) / 10
         age_vector[age // 10 + 1] = age % 10 / 10
         np.insert(age_vector, 0, test_list_txt_item[1])
@@ -125,10 +123,10 @@ def write_txt():
     for line in train_list_txt:
         w1.write(line + "\n")
     w1.close()
-    w2 = open(val_list, "a")
-    for line in val_list_txt:
-        w2.write(line + "\n")
-    w2.close()
+    # w2 = open(val_list, "a")
+    # for line in val_list_txt:
+    #     w2.write(line + "\n")
+    # w2.close()
     w3 = open(test_list, "a")
     for line in test_list_txt:
         w3.write(line + "\n")
@@ -193,13 +191,15 @@ def plot():
     plt.plot(x, y)
     plt.show()
 
+
 def tf_reduce_mean():
-    mean_loss = [1,2,3,5,6.]
+    mean_loss = [1, 2, 3, 5, 6.]
     # mean_loss = tf.cast(mean_loss, tf.float32)
     mean_loss = tf.reduce_mean(mean_loss)
 
     with tf.Session() as sess:
         print(sess.run(mean_loss))
+
 
 def lt3_loss():
     f = open("../logs/20191107_152820_train_log1", "r")
@@ -213,6 +213,7 @@ def lt3_loss():
 
     f.close()
     w.close()
+
 
 def merge_imdb_wiki():
     base = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/C3AE_Age_Estimation/data/dataset/imdb_wiki_crop/"
@@ -231,6 +232,7 @@ def merge_imdb_wiki():
     f2.close()
     w.close()
 
+
 def gen_morph2_align():
     args = get_args()
     start = int(args.start)
@@ -241,21 +243,11 @@ def gen_morph2_align():
     for name in tqdm(f):
         input_path = cfg.dataset.morph2 + "/" + name
         output_path = cfg.dataset.morph2_align + "/" + name
-        if os.path.isfile(output_path): #已经存在了就跳过
+        if os.path.isfile(output_path):  # 已经存在了就跳过
             # print("already exist")
             continue
 
         align.gen_align_img(input_path, output_path)
-
-def gen_morph2_align_append():
-    args = get_args()
-    start = int(args.start)
-    end = int(args.end)
-    base = cfg.DATASET
-    f = os.listdir(base + "/morph2/")  # 把所有图片名读进来
-    f = f[start:end]
-    for name in f:
-        align.gen_align_img(base + "/morph2/" + name)
 
 
 def gen_morph2_txt():
@@ -271,6 +263,7 @@ def gen_morph2_txt():
 
     w.close()
 
+
 def dlib_morph2_det():
     path = "/media/zouy/workspace/gitcloneroot/mypython/dataset/morph2_split/morph2.txt"
     f = open(path, "r")
@@ -278,8 +271,9 @@ def dlib_morph2_det():
     f.close()
     dlib_face(path, 0, lines.__len__())
 
+
 if __name__ == '__main__':
-    gen_morph2_align()
+    write_txt()
     # x = np.zeros(5)
     # x = np.insert(x, 1, [1, 2])
     # print(x)

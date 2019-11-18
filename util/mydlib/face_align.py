@@ -53,13 +53,14 @@ def demo():
     f = os.listdir(base + "morph2/")  # 把所有图片名读进来
     f = f[190:191]
     # path = base + "morph2/" + f[0]
-    path = base + "morph2/" + "070457_04M50.jpg"
+    path = base + "morph2/" + "077951_2M48.jpg"
     im_raw = cv2.imread(path).astype('uint8')
 
     detector = dlib.get_frontal_face_detector()
     gray = cv2.cvtColor(im_raw, cv2.COLOR_BGR2GRAY)
     height, width = gray.shape
     rects = detector(gray, 1)
+    print(rects)
 
     src_faces = []
     for (i, rect) in enumerate(rects):
@@ -115,5 +116,5 @@ def gen_align_img(img_path, out_path=None):
 
 
 if __name__ == "__main__":
-    # demo()
-    gen_align_img(cfg.dataset.morph2 + "/052791_0M46.jpg", cfg.dataset.morph2_align + "/052791_0M46.jpg")
+    demo()
+    # gen_align_img(cfg.dataset.morph2 + "/052791_0M46.jpg", cfg.dataset.morph2_align + "/052791_0M46.jpg")
