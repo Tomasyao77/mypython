@@ -2,9 +2,9 @@
 import os
 
 
-def log():
-    f = open("../log/log_t", "r")
-    w = open("../log/log_t1", "a")
+def log_refine(in_path, out_path):
+    f = open(in_path, "r")
+    w = open(out_path, "a")
     lines = f.readlines()  # 读取全部内容
     for line in lines:
         if 'best val mae' in line:
@@ -15,16 +15,16 @@ def log():
     w.close()
 
 
-def csv():
-    w = open("../data_dir/FG-NET/gt_avg_test.csv", "a")
+def fg_net_csv(img_root_path, csv_out_path):
+    w = open(csv_out_path, "a")
     lines = []
+    # 表头
     lines.append("file_name,apparent_age_avg,apparent_age_std,real_age")
-    path = "/media/zouy/workspace/gitcloneroot/age-estimation-pytorch/data_dir/FG-NET/test/"
 
-    # 获取该目录下所有文件，存入列表中
-    f = os.listdir(path)
+    f = os.listdir(img_root_path)
     for name in f:
         split_len = name.split("A").__len__()
+        # 提取文件名中的年龄
         if split_len == 2:
             tmp = name[name.index("A") + 1:name.index(".")]
         else:
@@ -38,11 +38,11 @@ def csv():
     w.close()
 
 
-def changename():
-    path = "/media/zouy/workspace/gitcloneroot/age-estimation-pytorch/data_dir/FG-NET/test"
-    f = os.listdir(path)
+# .JPG -> .jpg
+def filename_to_lowercase(img_root_path):
+    f = os.listdir(img_root_path)
     for name in f:
-        oldname = path + "/" + name
+        oldname = img_root_path + "/" + name
         # 设置新文件名
         newname = oldname[0:oldname.index(".")] + ".jpg"
 
@@ -50,5 +50,5 @@ def changename():
         os.rename(oldname, newname)
 
 
-if __name__ == '__main__':
-    csv()
+def list_to_str(a_list):
+    return " ".join(list(map(str, a_list)))

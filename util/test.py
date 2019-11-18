@@ -1,5 +1,11 @@
 # -*- coding: UTF-8 -*-
 import time
+# import sys
+# sys.path.append(".")
+# sys.path.append("..")
+# print(sys.path)
+import util.file_util
+import temp_py
 
 dict = {"0": 1, "1": 2, "abc": 'ff'}
 
@@ -17,4 +23,5 @@ def main(dict_=None):
     print(x[1:5])
 
 if __name__ == "__main__":
-    main(dict)
+    # main(dict)
+    print(sys.path)

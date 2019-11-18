@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+import sys
+sys.path.append('..')
 import os
 import math
 import numpy as np
@@ -7,8 +9,10 @@ import time
 import matplotlib.pyplot as plt  # 约定俗成的写法plt
 import tensorflow as tf
 from tqdm import tqdm
-import mydlib.face_align as align
-
+import util.mydlib.face_align as align
+from util.dlib_face import dlib_face
+from util.get_args import get_args
+from config import cfg
 
 def log():
     f = open("../logs/20191107_211836_train_log", "r")
@@ -228,14 +232,51 @@ def merge_imdb_wiki():
     w.close()
 
 def gen_morph2_align():
-    base = "/media/zouy/workspace/gitcloneroot/mypython/dataset/"
-    f = os.listdir(base + "morph2/")  # 把所有图片名读进来
-    for index, value in enumerate(f):
-        print(index, value)
-        align.gen_align_img(base + "morph2/" + value, base + "morph2_align/" + value)
-        if index >= 10:
-            break
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+    base = cfg.DATASET
+    f = os.listdir(cfg.dataset.morph2)  # 把所有图片名读进来
+    f = f[start:end]
+    for name in tqdm(f):
+        input_path = cfg.dataset.morph2 + "/" + name
+        output_path = cfg.dataset.morph2_align + "/" + name
+        if os.path.isfile(output_path): #已经存在了就跳过
+            # print("already exist")
+            continue
 
+        align.gen_align_img(input_path, output_path)
+
+def gen_morph2_align_append():
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+    base = cfg.DATASET
+    f = os.listdir(base + "/morph2/")  # 把所有图片名读进来
+    f = f[start:end]
+    for name in f:
+        align.gen_align_img(base + "/morph2/" + name)
+
+
+def gen_morph2_txt():
+    # base = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/"
+    base = "/media/zouy/workspace/gitcloneroot/mypython/dataset/"
+
+    f = os.listdir(base + "morph2/")  # 把所有图片名读进来
+    w = open(base + "morph2_split/morph2.txt", "a")
+    for name in f:
+        name = base + "morph2/" + name
+        name = name.replace("\n", "")
+        w.write(name + "\n")
+
+    w.close()
+
+def dlib_morph2_det():
+    path = "/media/zouy/workspace/gitcloneroot/mypython/dataset/morph2_split/morph2.txt"
+    f = open(path, "r")
+    lines = f.readlines()
+    f.close()
+    dlib_face(path, 0, lines.__len__())
 
 if __name__ == '__main__':
     gen_morph2_align()
