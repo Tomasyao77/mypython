@@ -133,6 +133,70 @@ def write_txt():
     w3.close()
 
 
+def csv_morph2_align():
+    # 产生train val test的csv文件比例7:2:1
+    path = cfg.dataset.morph2_align + "/"
+    train_list = cfg.dataset.morph2_split + "/gt_avg_train.csv"
+    val_list = cfg.dataset.morph2_split + "/gt_avg_valid.csv"
+    test_list = cfg.dataset.morph2_split + "/gt_avg_test.csv"
+
+    img_list_txt = []
+    train_list_txt = []
+    val_list_txt = []
+    test_list_txt = []
+    #设置表头
+    train_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    val_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    test_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+
+    f = os.listdir(path)  # 把所有图片名读进来
+    # print(f.__len__())#morph2: 52099 morph2_align: 52017
+
+    for name in f:
+        # print(name)
+        if "M" in name:
+            # img_list_txt.append(path + name + " " + name[name.index("M") + 1:name.index(".")])
+            img_list_txt.append(name + " " + name[name.index("M") + 1:name.index(".")])
+        elif "F" in name:
+            # img_list_txt.append(path + name + " " + name[name.index("F") + 1:name.index(".")])
+            img_list_txt.append(name + " " + name[name.index("F") + 1:name.index(".")])
+    # sort
+    # img_list_txt.sort()
+    # train_list_txt.sort()
+
+    # random.shuffle(img_list_txt)
+    train_list_txt_tmp = img_list_txt[:int(img_list_txt.__len__() * 0.7)]
+    val_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.7):int(img_list_txt.__len__() * 0.9)]
+    test_list_txt_tmp = img_list_txt[int(img_list_txt.__len__() * 0.9):]
+    # print(train_list_txt)
+    # 计算age_Yn_vector
+    for item in tqdm(train_list_txt_tmp):
+        name = item.split(" ")[0]
+        age = item.split(" ")[1]
+        train_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(val_list_txt_tmp):
+        name = item.split(" ")[0]
+        age = item.split(" ")[1]
+        val_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(test_list_txt_tmp):
+        name = item.split(" ")[0]
+        age = item.split(" ")[1]
+        test_list_txt.append(name + "," + age + ",1," + age)
+
+    w1 = open(train_list, "a")
+    for line in train_list_txt:
+        w1.write(line + "\n")
+    w1.close()
+    w2 = open(val_list, "a")
+    for line in val_list_txt:
+        w2.write(line + "\n")
+    w2.close()
+    w3 = open(test_list, "a")
+    for line in test_list_txt:
+        w3.write(line + "\n")
+    w3.close()
+
+
 def count_age_group():
     img_list = "/media/zouy/workspace/gitcloneroot/C3AE_Age_Estimation/data/img_list/img_list.txt"
     f = open(img_list, "r")
@@ -273,7 +337,7 @@ def dlib_morph2_det():
 
 
 if __name__ == '__main__':
-    write_txt()
+    csv_morph2_align()
     # x = np.zeros(5)
     # x = np.insert(x, 1, [1, 2])
     # print(x)

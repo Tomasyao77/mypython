@@ -6,22 +6,40 @@ import time
 # print(sys.path)
 import util.file_util
 import temp_py
+import numpy as np
 
 dict = {"0": 1, "1": 2, "abc": 'ff'}
 
 
 def main(dict_=None):
-
-    #print("邮件发送成功-时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+    # print("邮件发送成功-时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
     # mail_msg = "<p>喜报！服务器代码训练完毕！</p><br/>"
     # if dict_ is not None:
     #     for key, value in dict_.items():
     #         mail_msg += '<p>{key}: {value}</p>'.format(key=key, value=value)
     # print(mail_msg)
 
-    x = [1,2,3]
+    x = [1, 2, 3]
     print(x[1:5])
+
 
 if __name__ == "__main__":
     # main(dict)
-    print(sys.path)
+    # 判断各个数据集是否有重复元素，经检查的确没有
+    # f1 = open("/media/zouy/workspace/gitcloneroot/mypython/dataset/morph2_split/gt_avg_train.csv", "r")
+    # f2 = open("/media/zouy/workspace/gitcloneroot/mypython/dataset/morph2_split/gt_avg_valid.csv", "r")
+    # f3 = open("/media/zouy/workspace/gitcloneroot/mypython/dataset/morph2_split/gt_avg_test.csv", "r")
+    # list1 = f1.readlines()
+    # list2 = f2.readlines()
+    # list3 = f3.readlines()
+    # c = [x for x in list1 if x in list2]
+    # d = [x for x in list1 if x in list3]
+    # e = [x for x in list2 if x in list3]
+    # print (c)
+    # print (d)
+    # print (e)
+
+    # 求平均值
+    val_mae_list = [1, 3, 4, 6, 7]
+    # val_mae_list = np.concatenate(val_mae_list, axis=0)
+    print(np.array(val_mae_list).mean())

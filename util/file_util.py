@@ -1,5 +1,12 @@
 # -*- coding: UTF-8 -*-
+import sys
+sys.path.append("..")
 import os
+import pandas as pd
+from config import cfg
+import shutil
+from pathlib import Path
+from tqdm import tqdm
 
 
 def log_refine(in_path, out_path):
@@ -52,3 +59,21 @@ def filename_to_lowercase(img_root_path):
 
 def list_to_str(a_list):
     return " ".join(list(map(str, a_list)))
+
+
+# copyfile according to txt
+def cpfile_fromtxt():
+    img_root = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/age-estimation-pytorch/data_dir/morph2-align/morph2_align"
+    txt = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/age-estimation-pytorch/data_dir/morph2-align"
+    csv_path = txt + "/gt_avg_test.csv"
+    des_path = "/media/gisdom/data11/tomasyao/workspace/pycharm_ws/age-estimation-pytorch/img_dir"
+    df = pd.read_csv(str(csv_path))
+    # print(df)
+    for __, row in tqdm(df.iterrows()):
+        img_name = row["file_name"]
+        # print(str(i) + ": " + img_name)
+        shutil.copyfile(str(Path(img_root).joinpath(img_name)), str(Path(des_path).joinpath(img_name)))
+
+
+if __name__ == "__main__":
+    cpfile_fromtxt()
