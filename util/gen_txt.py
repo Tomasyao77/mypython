@@ -135,7 +135,7 @@ def write_txt():
 
 def csv_morph2_align():
     # 产生train val test的csv文件比例7:2:1
-    path = cfg.dataset.morph2_align + "/"
+    path = cfg.dataset.morph2 + "/"
     train_list = cfg.dataset.morph2_split + "/gt_avg_train.csv"
     val_list = cfg.dataset.morph2_split + "/gt_avg_valid.csv"
     test_list = cfg.dataset.morph2_split + "/gt_avg_test.csv"
@@ -195,7 +195,6 @@ def csv_morph2_align():
     for line in test_list_txt:
         w3.write(line + "\n")
     w3.close()
-
 
 def count_age_group():
     img_list = "/media/zouy/workspace/gitcloneroot/C3AE_Age_Estimation/data/img_list/img_list.txt"

@@ -1,5 +1,6 @@
 from easydict import EasyDict as edict
 import sys
+
 # sys.path.append(".")
 # sys.path.append("..")
 cfg = edict()
@@ -14,8 +15,11 @@ cfg.dlib68dat = cfg.BASE + "/util/mydlib/shape_predictor_68_face_landmarks.dat"
 cfg.dataset = edict()
 # morph2
 cfg.dataset.morph2 = cfg.DATASET + "/morph2"
-cfg.dataset.morph2_split = cfg.DATASET + "/morph2_split"
 cfg.dataset.morph2_align = cfg.DATASET + "/morph2_align"
+cfg.dataset.morph2_split = cfg.DATASET + "/morph2_split"
 # wiki_crop
 cfg.dataset.wiki_crop = cfg.DATASET + "/wiki_crop"
 cfg.dataset.wiki_crop_dlibdetect = cfg.DATASET + "/wiki_crop_dlibdetect"
+# FG-NET
+cfg.dataset.fgnet = cfg.DATASET + "/FG-NET"
+cfg.dataset.fgnet_leave1out = cfg.DATASET + "/FG-NET-leave1out"
