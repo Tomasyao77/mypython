@@ -16,54 +16,6 @@ from util.get_args import get_args
 from config import cfg
 
 
-def log():
-    f = open("../logs/20191107_211836_train_log", "r")
-    w = open("../logs/20191107_211836_train_log1", "a")
-    lines = f.readlines()  # 读取全部内容
-    for line in lines:
-        if 'epoch' in line:
-            w.write(line)
-            # print(line)
-
-    f.close()
-    w.close()
-
-
-def csv():
-    w = open("../data_dir/FG-NET/gt_avg_test.csv", "a")
-    lines = []
-    lines.append("file_name,apparent_age_avg,apparent_age_std,real_age")
-    path = "/media/zouy/workspace/gitcloneroot/age-estimation-pytorch/data_dir/FG-NET/test/"
-
-    # 获取该目录下所有文件，存入列表中
-    f = os.listdir(path)
-    for name in f:
-        split_len = name.split("A").__len__()
-        if split_len == 2:
-            tmp = name[name.index("A") + 1:name.index(".")]
-        else:
-            tmp = name[name.index("a") + 1:name.index(".")]
-        if tmp[-1].isalpha():
-            tmp = tmp[:-1]
-        lines.append(name + "," + tmp + ",1," + tmp)
-    # 写入csv文件
-    for line in lines:
-        w.write(line + "\n")
-    w.close()
-
-
-def changename():
-    path = "/media/zouy/workspace/gitcloneroot/C3AE_Age_Estimation/data/dataset/morph2/"
-    f = os.listdir(path)
-    for name in f:
-        oldname = path + "/" + name
-        # 设置新文件名
-        newname = oldname[0:oldname.index(".")] + ".jpg"
-
-        # 用os模块中的rename方法对文件改名
-        os.rename(oldname, newname)
-
-
 def write_txt():
     path = cfg.dataset.morph2_align + "/"
     train_list = cfg.dataset.morph2_split + "/train_morph2_align.txt"
@@ -144,7 +96,7 @@ def csv_morph2_align():
     train_list_txt = []
     val_list_txt = []
     test_list_txt = []
-    #设置表头
+    # 设置表头
     train_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
     val_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
     test_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
@@ -183,6 +135,14 @@ def csv_morph2_align():
         age = item.split(" ")[1]
         test_list_txt.append(name + "," + age + ",1," + age)
 
+    # 如果文件已存在则删除 因为后面打开模式是a 表示追加 以免造成数据重复
+    if os.path.isfile(train_list):
+        os.remove(str(train_list))
+    if os.path.isfile(val_list):
+        os.remove(str(val_list))
+    if os.path.isfile(test_list):
+        os.remove(str(test_list))
+
     w1 = open(train_list, "a")
     for line in train_list_txt:
         w1.write(line + "\n")
@@ -195,6 +155,7 @@ def csv_morph2_align():
     for line in test_list_txt:
         w3.write(line + "\n")
     w3.close()
+
 
 def count_age_group():
     img_list = "/media/zouy/workspace/gitcloneroot/C3AE_Age_Estimation/data/img_list/img_list.txt"

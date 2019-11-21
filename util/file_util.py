@@ -34,7 +34,12 @@ def fg_net_nameatoA(img_root_path):
             os.rename(oldname, newname)
 
 
-def fg_net_csv(img_root_path, csv_out_path):
+def fg_net_csv():
+    img_root_path = cfg.dataset.fgnet
+    csv_out_path = cfg.dataset.fgnet_split
+    # 目录不存在先创建
+    if not os.path.isdir(str(csv_out_path)):
+        os.makedirs(str(csv_out_path))
     w = open(csv_out_path, "a")
     lines = []
     # 表头
@@ -181,6 +186,14 @@ def cacd2000_csv():
         name = item
         age = item.split("_")[0]
         test_list_txt.append(name + "," + age + ",1," + age)
+
+    # 如果文件已存在则删除 因为后面打开模式是a 表示追加 以免造成数据重复
+    if os.path.isfile(train_list):
+        os.remove(str(train_list))
+    if os.path.isfile(val_list):
+        os.remove(str(val_list))
+    if os.path.isfile(test_list):
+        os.remove(str(test_list))
 
     w1 = open(train_list, "a")
     for line in train_list_txt:
