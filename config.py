@@ -23,3 +23,6 @@ cfg.dataset.wiki_crop_dlibdetect = cfg.DATASET + "/wiki_crop_dlibdetect"
 # FG-NET
 cfg.dataset.fgnet = cfg.DATASET + "/FG-NET"
 cfg.dataset.fgnet_leave1out = cfg.DATASET + "/FG-NET-leave1out"
+# CACD2000
+cfg.dataset.cacd2000 = cfg.DATASET + "/CACD2000"
+cfg.dataset.cacd2000_split = cfg.DATASET + "/CACD2000_split"

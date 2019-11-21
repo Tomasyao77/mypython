@@ -40,6 +40,22 @@ if __name__ == "__main__":
     # print (e)
 
     # 求平均值
-    val_mae_list = [1, 3, 4, 6, 7]
-    # val_mae_list = np.concatenate(val_mae_list, axis=0)
-    print(np.array(val_mae_list).mean())
+    # val_mae_list = [1, 3, 4, 6, 7]
+    # print(np.array(val_mae_list).mean())
+
+    #矩阵相乘
+    # import torch
+    # import torch.nn.functional as F
+    #
+    # preds = []
+    # outputs = torch.Tensor([[1.,2.,3.]])
+    # preds.append(F.softmax(outputs, dim=-1).cpu().numpy())
+    # outputs = torch.Tensor([[2., 2., 3.]])
+    # preds.append(F.softmax(outputs, dim=-1).cpu().numpy())
+    # preds = np.concatenate(preds, axis=0)  # [1 2 3 1 2 3 1 2 3]
+    # print(preds)
+    # ages = np.arange(0,3)
+    # ave_preds = (preds * ages).sum(axis=-1)
+    #
+    # print(f"ave_preds:{ave_preds}")
+

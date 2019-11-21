@@ -123,10 +123,10 @@ def fg_net_leave1out():
                 lines_train.append(name + "," + age + ",1," + age)
                 if not os.path.isfile(str(Path(des_dir_train).joinpath(name))):
                     shutil.copyfile(str(Path(origin_dir).joinpath(name)), str(Path(des_dir_train).joinpath(name)))
-        #生成csv文件
+        # 生成csv文件
         csv_out_path_test = Path(des_dir_root).joinpath(tmp).joinpath("gt_avg_test.csv")
         csv_out_path_train = Path(des_dir_root).joinpath(tmp).joinpath("gt_avg_train.csv")
-        #如果文件已存在则删除 因为后面打开模式是a 表示追加 以免造成数据重复
+        # 如果文件已存在则删除 因为后面打开模式是a 表示追加 以免造成数据重复
         if os.path.isfile(csv_out_path_test):
             os.remove(str(csv_out_path_test))
         if os.path.isfile(csv_out_path_test):
@@ -143,7 +143,60 @@ def fg_net_leave1out():
         w_train.close()
 
 
+# CACD2000
+def cacd2000_csv():
+    # 产生train val test的csv文件比例7:2:1
+    path = cfg.dataset.cacd2000 + "/"
+    train_list = cfg.dataset.cacd2000_split + "/gt_avg_train.csv"
+    val_list = cfg.dataset.cacd2000_split + "/gt_avg_valid.csv"
+    test_list = cfg.dataset.cacd2000_split + "/gt_avg_test.csv"
+
+    train_list_txt = []
+    val_list_txt = []
+    test_list_txt = []
+    # 设置表头
+    train_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    val_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    test_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+
+    f = os.listdir(path)  # 把所有图片名读进来
+    # print(f.__len__())  # cacd2000: 163446
+    # for name in f:
+    #     print(name)
+    # print(f)
+
+    train_list_txt_tmp = f[:int(f.__len__() * 0.7)]
+    val_list_txt_tmp = f[int(f.__len__() * 0.7):int(f.__len__() * 0.9)]
+    test_list_txt_tmp = f[int(f.__len__() * 0.9):]
+    # 计算age_Yn_vector
+    for item in tqdm(train_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        train_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(val_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        val_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(test_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        test_list_txt.append(name + "," + age + ",1," + age)
+
+    w1 = open(train_list, "a")
+    for line in train_list_txt:
+        w1.write(line + "\n")
+    w1.close()
+    w2 = open(val_list, "a")
+    for line in val_list_txt:
+        w2.write(line + "\n")
+    w2.close()
+    w3 = open(test_list, "a")
+    for line in test_list_txt:
+        w3.write(line + "\n")
+    w3.close()
+
+
 if __name__ == "__main__":
     # cpfile_fromtxt()
     # fg_net_nameatoA("/media/zouy/workspace/gitcloneroot/mypython/dataset/FG-NET")
-    fg_net_leave1out()
+    cacd2000_csv()
