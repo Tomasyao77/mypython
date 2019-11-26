@@ -10,13 +10,14 @@ else
 	echo "starting..."
 fi
 
-if [ $1 = "dlib_align_morph2" ]
+if [ $1 = "dlib_align_fgnet" ]
 then
-	echo "dlib_align_morph2..."
+	echo "dlib_align_start..."
 	source activate tfgpu
-	num_core=40
+	cd ${basepath}/util
+	num_core=32
 	start=0
-	total=52099
+	total=1002
 	len=$(expr $total - $start)
 	gap=$(expr $len / $num_core)
 	((gap++))
@@ -25,7 +26,7 @@ then
 	do
 		end=$(expr $start + $gap)
 		# echo $start - $end
-		setsid python ${basepath}/util/gen_txt.py --start=$start --end=$end > $basepath/logs/dlib_align_morph2_tmp_thread$i 2>&1 &
+		setsid python ./file_util.py --start=$start --end=$end > $basepath/logs/dlib_align_fgnet_thread$i 2>&1 &
 		start=$end
 	done
 else

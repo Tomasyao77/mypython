@@ -8,6 +8,8 @@ from config import cfg
 import shutil
 from pathlib import Path
 from tqdm import tqdm
+import util.mydlib.face_align as align
+from util.get_args import get_args
 
 
 def log_refine(in_path, out_path):
@@ -15,7 +17,7 @@ def log_refine(in_path, out_path):
     w = open(out_path, "a")
     lines = f.readlines()  # 读取全部内容
     for line in lines:
-        if 'best val mae' in line:
+        if 'best val mae:' in line:
             w.write(line)
             # print(line)
 
@@ -208,8 +210,36 @@ def cacd2000_csv():
         w3.write(line + "\n")
     w3.close()
 
+#fgnet align
+def fg_net_align():
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+    f = os.listdir(cfg.dataset.fgnet)  # 把所有图片名读进来
+    f = f[start:end]
+    # 目录不存在先创建
+    if not os.path.isdir(cfg.dataset.fgnet_align):
+        os.makedirs(cfg.dataset.fgnet_align)
+
+    for name in tqdm(f):
+        input_path = cfg.dataset.fgnet + "/" + name
+        output_path = cfg.dataset.fgnet_align + "/" + name
+        if os.path.isfile(output_path):  # 已经存在了就跳过
+            continue
+
+        align.gen_align_img(input_path, output_path)
 
 if __name__ == "__main__":
     # cpfile_fromtxt()
     # fg_net_nameatoA("/media/zouy/workspace/gitcloneroot/mypython/dataset/FG-NET")
-    cacd2000_csv()
+    # fg_net_leave1out()
+
+    # f = open("/media/zouy/workspace/gitcloneroot/mypython/logs/20191122_094322_train_log1", "r")
+    # lines = f.readlines()
+    # arr = []
+    # for line in lines:
+    #     best_val_mae = line.replace("\n", "").split(" ")[-1]
+    #     arr.append(float(best_val_mae))
+    # print(arr)
+
+    fg_net_leave1out()
