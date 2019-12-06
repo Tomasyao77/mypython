@@ -10,6 +10,8 @@ from pathlib import Path
 from tqdm import tqdm
 import util.mydlib.face_align as align
 from util.get_args import get_args
+import numpy as np
+import cv2
 
 
 def log_refine(in_path, out_path):
@@ -210,7 +212,8 @@ def cacd2000_csv():
         w3.write(line + "\n")
     w3.close()
 
-#fgnet align
+
+# fgnet align
 def fg_net_align():
     args = get_args()
     start = int(args.start)
@@ -229,6 +232,7 @@ def fg_net_align():
 
         align.gen_align_img(input_path, output_path)
 
+
 if __name__ == "__main__":
     # cpfile_fromtxt()
     # fg_net_nameatoA("/media/zouy/workspace/gitcloneroot/mypython/dataset/FG-NET")
@@ -242,4 +246,47 @@ if __name__ == "__main__":
     #     arr.append(float(best_val_mae))
     # print(arr)
 
-    fg_net_leave1out()
+    # fg_net_leave1out()
+
+    # random copy
+    # data_dir = cfg.dataset.morph2
+    # f = os.listdir(data_dir)  # 把所有图片名读进来
+    # # print(f.__len__())  # cacd2000: 163446
+    # np.random.shuffle(f)
+    # pick = f[:20]
+    # des_dir = "/home/zouy/Desktop/mdpi_age/img/dataset/morph2"
+    # for name in pick:
+    #     shutil.copyfile(data_dir + "/" + name, des_dir + "/" + name)
+    #
+    # #cv2 resize
+    # data_dir = "/home/zouy/Desktop/mdpi_age/img/dataset/morph2"
+    # f = os.listdir(data_dir)
+    # for name in f:
+    #     img = cv2.imread(data_dir + "/" + name)
+    #     img_resize = cv2.resize(img, (160, 210))
+    #     cv2.imwrite(data_dir + "/" + name, img_resize)
+
+    # fgnet
+    # data_dir = "/home/zouy/Desktop/mdpi_age/img/dataset/FG-NET"
+    # f = os.listdir(data_dir)
+    # for name in f:
+    #     img = cv2.imread(data_dir + "/" + name)
+    #     img_resize = cv2.resize(img, (160, 200))
+    #     cv2.imwrite(data_dir + "/" + name, img_resize)
+
+    # dlib data
+    # data_dir = cfg.dataset.morph2
+    # f = os.listdir(data_dir)  # 把所有图片名读进来
+    # # print(f.__len__())  # cacd2000: 163446
+    # np.random.shuffle(f)
+    # pick = f[:20]
+    # des_dir = "/home/zouy/Desktop/mdpi_age/img/dlib"
+    # for name in pick:
+    #     shutil.copyfile(data_dir + "/" + name, des_dir + "/" + name)
+
+    # dlib crop
+    base = "/home/zouy/Desktop/mdpi_age/img/dlib"
+    img1 = base + "/241301_05M25.jpg"
+    img2 = base + "/316052_00M17.jpg"
+    align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
+    align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
