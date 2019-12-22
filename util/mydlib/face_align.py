@@ -33,7 +33,7 @@ def face_alignment(faces):
         for j in order:
             x = shape.part(j).x
             y = shape.part(j).y
-            # cv2.circle(face, (x, y), 2, (0, 0, 255), -1)
+            cv2.circle(face, (x, y), 2, (0, 0, 255), -1)
 
         eye_center = ((shape.part(36).x + shape.part(45).x) * 1. / 2,  # 计算两眼的中心坐标
                       (shape.part(36).y + shape.part(45).y) * 1. / 2)
@@ -47,13 +47,8 @@ def face_alignment(faces):
     return faces_aligned
 
 
-def demo():
-    base = "/media/zouy/workspace/gitcloneroot/mypython/dataset/"
-
-    f = os.listdir(base + "morph2/")  # 把所有图片名读进来
-    f = f[190:191]
-    # path = base + "morph2/" + f[0]
-    path = base + "morph2/" + "077951_2M48.jpg"
+def demo(img_path, dect_path, adjust_path):
+    path = img_path
     im_raw = cv2.imread(path).astype('uint8')
 
     detector = dlib.get_frontal_face_detector()
@@ -71,15 +66,16 @@ def demo():
         cv2.rectangle(im_raw, (x, y), (x + w, y + h), (0, 255, 0), 1)
         cv2.putText(im_raw, "Face: {}".format(i + 1), (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
+    cv2.imwrite(dect_path, im_raw)
     faces_aligned = face_alignment(src_faces)
 
-    cv2.imshow("src", im_raw)
+    # cv2.imshow("src", im_raw)
     i = 0
     for face in faces_aligned:
-        # cv2.imwrite("/media/zouy/workspace/gitcloneroot/mypython/mydlib/out_dir/1.jpg", face)
-        cv2.imshow("det_{}".format(i), face)
+        cv2.imwrite(adjust_path, face)
+        # cv2.imshow("det_{}".format(i), face)
         i = i + 1
-    cv2.waitKey(0)
+    # cv2.waitKey(0)
 
 
 def gen_align_img(img_path, out_path=None):

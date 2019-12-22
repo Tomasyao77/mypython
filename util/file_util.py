@@ -285,8 +285,8 @@ if __name__ == "__main__":
     #     shutil.copyfile(data_dir + "/" + name, des_dir + "/" + name)
 
     # dlib crop
-    base = "/home/zouy/Desktop/mdpi_age/img/dlib"
-    img1 = base + "/241301_05M25.jpg"
-    img2 = base + "/316052_00M17.jpg"
-    align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
-    align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
+    # base = "/home/zouy/Desktop/mdpi_age/img/dlib"
+    # img1 = base + "/241301_05M25.jpg"
+    # img2 = base + "/316052_00M17.jpg"
+    # align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
+    # align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
