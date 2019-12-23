@@ -236,7 +236,7 @@ def fg_net_align():
         align.gen_align_img(input_path, output_path)
 
 
-# CE_FACE
+# CE_FACE download
 def download_ce_face():
     args = get_args()
     start = int(args.start)
@@ -255,6 +255,7 @@ def download_ce_face():
             attr = item.split(",")
             cid = str(attr[0])
             if cid in tmp_arr:  # 用户id去重
+                print("cid already exists: ", cid)
                 continue
             tmp_arr.append(cid)
             dp_id = str(attr[1])
@@ -275,6 +276,7 @@ def download_ce_face():
                 # 拼接图片名（包含路径）
                 filename = '{}{}{}{}'.format(file_path, os.sep, file_name, file_suffix)
                 if os.path.isfile(filename):  # 已经存在了就跳过
+                    print("filename already exists: ", filename)
                     continue
                 # 下载图片，并保存到文件夹中
                 response = request.urlopen(url).read()
@@ -302,6 +304,65 @@ def download_ce_face():
             w.write(line + "\n")
         w.close()
 
+# CE_FACE csv
+def ce_face_csv():
+    # 产生train val test的csv文件比例7:2:1
+    path = cfg.dataset.ceface + "/ce_face"
+    train_list = cfg.dataset.ceface + "/gt_avg_train.csv"
+    val_list = cfg.dataset.ceface + "/gt_avg_valid.csv"
+    test_list = cfg.dataset.ceface + "/gt_avg_test.csv"
+
+    train_list_txt = []
+    val_list_txt = []
+    test_list_txt = []
+    # 设置表头
+    train_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    val_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+    test_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
+
+    f = os.listdir(path)  # 把所有图片名读进来
+    # print(f.__len__())  # CE_FACE: 5万张?
+    # for name in f:
+    #     print(name)
+    # print(f)
+
+    train_list_txt_tmp = f[:int(f.__len__() * 0.7)]
+    val_list_txt_tmp = f[int(f.__len__() * 0.7):int(f.__len__() * 0.9)]
+    test_list_txt_tmp = f[int(f.__len__() * 0.9):]
+    # 计算age_Yn_vector
+    for item in tqdm(train_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        train_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(val_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        val_list_txt.append(name + "," + age + ",1," + age)
+    for item in tqdm(test_list_txt_tmp):
+        name = item
+        age = item.split("_")[0]
+        test_list_txt.append(name + "," + age + ",1," + age)
+
+    # 如果文件已存在则删除 因为后面打开模式是a 表示追加 以免造成数据重复
+    if os.path.isfile(train_list):
+        os.remove(str(train_list))
+    if os.path.isfile(val_list):
+        os.remove(str(val_list))
+    if os.path.isfile(test_list):
+        os.remove(str(test_list))
+
+    w1 = open(train_list, "a")
+    for line in train_list_txt:
+        w1.write(line + "\n")
+    w1.close()
+    w2 = open(val_list, "a")
+    for line in val_list_txt:
+        w2.write(line + "\n")
+    w2.close()
+    w3 = open(test_list, "a")
+    for line in test_list_txt:
+        w3.write(line + "\n")
+    w3.close()
 
 if __name__ == "__main__":
     # cpfile_fromtxt()
