@@ -12,6 +12,9 @@ import util.mydlib.face_align as align
 from util.get_args import get_args
 import numpy as np
 import cv2
+import datetime as dt
+import urllib.request as request
+import numpy as np
 
 
 def log_refine(in_path, out_path):
@@ -233,6 +236,73 @@ def fg_net_align():
         align.gen_align_img(input_path, output_path)
 
 
+# CE_FACE
+def download_ce_face():
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+
+    w = open(cfg.dataset.ceface + "/ce_face_1.csv", 'a')
+    w_arr = []
+    with open(cfg.dataset.ceface + "/ce_face_0.csv", 'r') as file:
+        # 76911 -> 53363 -> (7490)
+        urls = file.readlines()
+        print("len(urls):", len(urls))
+        tmp_arr = []
+
+        for item in tqdm(urls[start:end]):
+            # 0(cid) 1(dp_id) 2(birthday) 3(gender) 4(url) 5(file_create_time)
+            attr = item.split(",")
+            cid = str(attr[0])
+            if cid in tmp_arr:  # 用户id去重
+                continue
+            tmp_arr.append(cid)
+            dp_id = str(attr[1])
+            now_year = dt.datetime.today().year  # 当前的年份
+            age = now_year - int(attr[2].split("-")[0])
+            gender = 0 if attr[3] == "男" else 1
+            url = attr[4]
+            file_path = cfg.dataset.ceface + "/ce_face"
+            file_name = str(age) + "_" + str(gender) + "_" + str(dp_id) + "_" + str(cid)
+
+            # w_arr.append(item[item.index(",")+1:])
+            w_arr.append(item)
+
+            try:
+                if not os.path.exists(file_path):
+                    os.makedirs(file_path)
+                file_suffix = os.path.splitext(url)[1]
+                # 拼接图片名（包含路径）
+                filename = '{}{}{}{}'.format(file_path, os.sep, file_name, file_suffix)
+                if os.path.isfile(filename):  # 已经存在了就跳过
+                    continue
+                # 下载图片，并保存到文件夹中
+                response = request.urlopen(url).read()
+
+                img_array = np.array(bytearray(response), dtype=np.uint8)
+                img = cv2.imdecode(img_array, -1)
+
+                # resize
+                # img = cv2.resize(img, (1024, 1024))
+                # show
+                # cv2.imshow('image', img)
+                # cv2.waitKey(0)
+
+                cv2.imwrite(filename, img, [int(cv2.IMWRITE_JPEG_QUALITY), 20])
+                w_arr.append(item)
+
+            except IOError as e:
+                print("IOError", e)  # 404
+            except Exception as e:
+                print(e)
+
+        print("w_arr.len: ", w_arr.__len__())
+        for line in w_arr:
+            line = line.replace("\n", "")
+            w.write(line + "\n")
+        w.close()
+
+
 if __name__ == "__main__":
     # cpfile_fromtxt()
     # fg_net_nameatoA("/media/zouy/workspace/gitcloneroot/mypython/dataset/FG-NET")
@@ -290,3 +360,5 @@ if __name__ == "__main__":
     # img2 = base + "/316052_00M17.jpg"
     # align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
     # align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
+
+    download_ce_face()

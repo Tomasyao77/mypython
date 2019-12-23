@@ -6,7 +6,8 @@ import sys
 cfg = edict()
 
 cfg.batch_size = 50
-cfg.BASE = "/media/zouy/workspace/gitcloneroot/mypython"  # 项目根目录
+# cfg.BASE = "/media/zouy/workspace/gitcloneroot/mypython"  # 项目根目录
+cfg.BASE = "/media/d9lab/data11/tomasyao/workspace/pycharm_ws/mypython"  # 项目根目录
 cfg.LOGS = cfg.BASE + "/logs"
 cfg.DATASET = cfg.BASE + "/dataset"
 cfg.dlib68dat = cfg.BASE + "/util/mydlib/shape_predictor_68_face_landmarks.dat"
@@ -29,3 +30,5 @@ cfg.dataset.fgnet_align_leave1out = cfg.DATASET + "/FG-NET_align-leave1out"
 # CACD2000
 cfg.dataset.cacd2000 = cfg.DATASET + "/CACD2000"
 cfg.dataset.cacd2000_split = cfg.DATASET + "/CACD2000_split"
+# CE_FACE
+cfg.dataset.ceface = cfg.DATASET + "/CE_FACE"
