@@ -32,3 +32,4 @@ cfg.dataset.cacd2000 = cfg.DATASET + "/CACD2000"
 cfg.dataset.cacd2000_split = cfg.DATASET + "/CACD2000_split"
 # CE_FACE
 cfg.dataset.ceface = cfg.DATASET + "/CE_FACE"
+cfg.dataset.ceface_align = cfg.dataset.ceface + "/CE_FACE_align"

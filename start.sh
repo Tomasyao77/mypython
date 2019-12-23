@@ -48,6 +48,25 @@ then
 		setsid python ./file_util.py --start=$start --end=$end > $basepath/logs/download_ce_thread$i 2>&1 &
 		start=$end
 	done
+elif [ $1 = "dlib_align_ce" ]
+then
+	echo "dlib_align_ce_start..."
+	source activate torchg
+	cd ${basepath}/util
+	num_core=32
+	start=0
+	total=10576
+	len=$(expr $total - $start)
+	gap=$(expr $len / $num_core)
+	((gap++))
+	# echo gap - $gap
+	for (( i=0; i<$num_core; i++ ))
+	do
+		end=$(expr $start + $gap)
+		# echo $start - $end
+		setsid python ./file_util.py --start=$start --end=$end > $basepath/logs/dlib_align_ce_thread$i 2>&1 &
+		start=$end
+	done
 else
 	echo "do nothing"
 fi

@@ -304,10 +304,29 @@ def download_ce_face():
             w.write(line + "\n")
         w.close()
 
+# CE_FACE align 10576 -> 10276(有效)
+def ce_face_align():
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+    f = os.listdir(cfg.dataset.ceface + "/ce_face")  # 把所有图片名读进来
+    f = f[start:end]
+    # 目录不存在先创建
+    if not os.path.isdir(cfg.dataset.ceface_align):
+        os.makedirs(cfg.dataset.ceface_align)
+
+    for name in tqdm(f):
+        input_path = cfg.dataset.ceface + "/ce_face/" + name
+        output_path = cfg.dataset.ceface_align + "/" + name
+        if os.path.isfile(output_path):  # 已经存在了就跳过
+            continue
+
+        align.gen_align_img(input_path, output_path)
+
 # CE_FACE csv
 def ce_face_csv():
     # 产生train val test的csv文件比例7:2:1
-    path = cfg.dataset.ceface + "/ce_face"
+    path = cfg.dataset.ceface_align #图片目录
     train_list = cfg.dataset.ceface + "/gt_avg_train.csv"
     val_list = cfg.dataset.ceface + "/gt_avg_valid.csv"
     test_list = cfg.dataset.ceface + "/gt_avg_test.csv"
@@ -321,7 +340,7 @@ def ce_face_csv():
     test_list_txt.append("file_name,apparent_age_avg,apparent_age_std,real_age")
 
     f = os.listdir(path)  # 把所有图片名读进来
-    # print(f.__len__())  # CE_FACE: 5万张?
+    # print(f.__len__())  # CE_FACE: 10576万张
     # for name in f:
     #     print(name)
     # print(f)
@@ -422,4 +441,6 @@ if __name__ == "__main__":
     # align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
     # align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
 
-    download_ce_face()
+    # download_ce_face()
+    # ce_face_align()
+    ce_face_csv()

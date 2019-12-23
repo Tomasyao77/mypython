@@ -10,7 +10,7 @@ from config import cfg
 
 
 def rect_to_bb(rect, height=0, width=0):  # 获得人脸矩形的坐标信息
-    #要注意处理越界!!!
+    # 要注意处理越界!!!
     x = 0 if rect.left() < 0 else rect.left()
     y = 0 if rect.top() < 0 else rect.top()
 
@@ -75,11 +75,16 @@ def demo(img_path, dect_path, adjust_path):
         cv2.imwrite(adjust_path, face)
         # cv2.imshow("det_{}".format(i), face)
         i = i + 1
-    # cv2.waitKey(0)
+        # cv2.waitKey(0)
 
 
 def gen_align_img(img_path, out_path=None):
     im_raw = cv2.imread(img_path).astype('uint8')
+    # im_raw = cv2.resize(im_raw, (224, 224))
+    im_raw = np.rot90(im_raw, 3)
+    # cv2.imshow("temp", im_raw)
+    # cv2.waitKey(0)
+    # exit(1)
     # 人脸检测
     detector = dlib.get_frontal_face_detector()
     gray = cv2.cvtColor(im_raw, cv2.COLOR_BGR2GRAY)
@@ -112,5 +117,13 @@ def gen_align_img(img_path, out_path=None):
 
 
 if __name__ == "__main__":
-    demo()
-    # gen_align_img(cfg.dataset.morph2 + "/052791_0M46.jpg", cfg.dataset.morph2_align + "/052791_0M46.jpg")
+    # demo()
+    if not os.path.isdir(cfg.dataset.ceface_align):
+        os.mkdir(cfg.dataset.ceface_align)
+
+    # gen_align_img(cfg.dataset.ceface + "/ce_face/21_1_390781_67676.jpg",
+    #               cfg.dataset.ceface_align + "/21_1_390781_67676.jpg")
+    # img = cv2.imread(cfg.dataset.ceface_align + "/21_1_390781_67676.jpg")
+    # cv2.imshow("img", cv2.resize(img, (224, 224)))
+    # cv2.waitKey(0)
+
