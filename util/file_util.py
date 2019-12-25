@@ -245,7 +245,7 @@ def download_ce_face():
     w = open(cfg.dataset.ceface + "/ce_face_1.csv", 'a')
     w_arr = []
     with open(cfg.dataset.ceface + "/ce_face_0.csv", 'r') as file:
-        # 76911 -> 53363 -> (7490)
+        # 76911 -> 53363 -> (10536)
         urls = file.readlines()
         print("len(urls):", len(urls))
         tmp_arr = []
@@ -441,6 +441,6 @@ if __name__ == "__main__":
     # align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
     # align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
 
-    # download_ce_face()
+    download_ce_face()
     # ce_face_align()
-    ce_face_csv()
+    # ce_face_csv()
