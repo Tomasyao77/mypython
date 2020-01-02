@@ -294,7 +294,7 @@ def download_ce_face():
                 w_arr.append(item)
 
             except IOError as e:
-                print("IOError", e)  # 404
+                print("IOError", e)  # 404 3000多张404 not found
             except Exception as e:
                 print(e)
 
@@ -304,7 +304,9 @@ def download_ce_face():
             w.write(line + "\n")
         w.close()
 
-# CE_FACE align 10576 -> 10276(有效)
+# CE_FACE align
+# 10576 -> 10276(有效)
+# 50324 - > 49049(有效) 69GB
 def ce_face_align():
     args = get_args()
     start = int(args.start)
@@ -323,10 +325,30 @@ def ce_face_align():
 
         align.gen_align_img(input_path, output_path)
 
+# 6.5min 48个进程 49049张图片
+def ce_face_resize(to_size=224):
+    args = get_args()
+    start = int(args.start)
+    end = int(args.end)
+    f = os.listdir(cfg.dataset.ceface_align)  # 把所有图片名读进来
+    f = f[start:end]
+    # 目录不存在先创建
+    if not os.path.isdir(cfg.dataset.ceface_align_224):
+        os.makedirs(cfg.dataset.ceface_align_224)
+
+    for name in tqdm(f):
+        input_path = cfg.dataset.ceface_align + "/" + name
+        output_path = cfg.dataset.ceface_align_224 + "/" + name
+        if os.path.isfile(output_path):  # 已经存在了就跳过
+            continue
+        img = cv2.imread(input_path)
+        img_resize = cv2.resize(img, (to_size, to_size))
+        cv2.imwrite(output_path, img_resize)
+
 # CE_FACE csv
 def ce_face_csv():
     # 产生train val test的csv文件比例7:2:1
-    path = cfg.dataset.ceface_align #图片目录
+    path = cfg.dataset.ceface_align_224 #图片目录
     train_list = cfg.dataset.ceface + "/gt_avg_train.csv"
     val_list = cfg.dataset.ceface + "/gt_avg_valid.csv"
     test_list = cfg.dataset.ceface + "/gt_avg_test.csv"
@@ -441,6 +463,9 @@ if __name__ == "__main__":
     # align.demo(img1, base + "/241301_05M25_dect.jpg", base + "/241301_05M25_adjust.jpg")
     # align.demo(img2, base + "/316052_00M17_dect.jpg", base + "/316052_00M17_adjust.jpg")
 
-    download_ce_face()
+    # download_ce_face()
     # ce_face_align()
-    # ce_face_csv()
+    # ce_face_resize(224)
+    ce_face_csv()
+
+    # log_refine()
