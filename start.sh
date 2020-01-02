@@ -36,7 +36,7 @@ then
 	cd ${basepath}/util
 	num_core=8
 	start=0
-	total=53363
+	total=53363 #50324有效
 	len=$(expr $total - $start)
 	gap=$(expr $len / $num_core)
 	((gap++))
@@ -53,9 +53,9 @@ then
 	echo "dlib_align_ce_start..."
 	source activate torchg
 	cd ${basepath}/util
-	num_core=32
+	num_core=48
 	start=0
-	total=10576
+	total=49049 #50324
 	len=$(expr $total - $start)
 	gap=$(expr $len / $num_core)
 	((gap++))
