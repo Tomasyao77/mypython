@@ -6,8 +6,8 @@ import sys
 cfg = edict()
 
 cfg.batch_size = 50
-# cfg.BASE = "/media/zouy/workspace/gitcloneroot/mypython"  # 项目根目录
-cfg.BASE = "/media/d9lab/data11/tomasyao/workspace/pycharm_ws/mypython"  # 项目根目录
+cfg.BASE = "/media/zouy/workspace/gitcloneroot/mypython"  # 项目根目录
+# cfg.BASE = "/media/d9lab/data11/tomasyao/workspace/pycharm_ws/mypython"  # 项目根目录
 cfg.LOGS = cfg.BASE + "/logs"
 cfg.DATASET = cfg.BASE + "/dataset"
 cfg.dlib68dat = cfg.BASE + "/util/mydlib/shape_predictor_68_face_landmarks.dat"
